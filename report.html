@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отчёт сотрудника КМК</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #eaeef3;
+            color: #333;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            max-width: 500px;
+            width: 90%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .form-container:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 26px;
+            color: #2c3e50;
+        }
+
+        label {
+            font-weight: 500;
+            margin-bottom: 5px;
+            display: block;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: #f9f9f9;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+            background-color: #fff;
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Нормализация для input[type="date"] */
+        input[type="date"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            padding: 12px;
+            width: 100%;
+            box-sizing: border-box;
+            color: #555;
+            cursor: pointer;
+        }
+
+        input[type="date"]:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+            background-color: #fff;
+            outline: none;
+        }
+
+        /* Улучшение для select */
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+            color: #555;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='%23555'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px 12px;
+        }
+
+        select:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+            background-color: #fff;
+            outline: none;
+        }
+
+        /* Убираем стандартную стрелку для input[type="number"] */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield; /* Firefox */
+        }
+
+        /* Стили для горизонтального контейнера */
+        .horizontal-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .horizontal-container > div {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="header">
+            <img src="https://raw.githubusercontent.com/PavelErsh/images/refs/heads/main/bg.png" alt="Логотип">
+            <h1>Отчёт сотрудника КМК</h1>
+        </div>
+        <form action="/submit" method="post">
+            <label for="date">Дата отчёта:</label>
+            <input type="date" id="date" name="date" required>
+            <script>
+                // Автоматически заполняем поле даты текущим значением
+                window.onload = function () {
+                    const today = new Date().toISOString().split('T')[0];
+                    document.getElementById('date').value = today;
+                };
+            </script>
+
+            <label for="new_applications">Новее заявки:</label>
+            <input type="number" id="new_applications" name="new_applications" placeholder="Введите количество" required>
+
+            <label for="target">Целевые:</label>
+            <input type="number" id="target" name="target" placeholder="Введите количество" required>
+
+            <div class="horizontal-container">
+                <div>
+                    <label for="percentage">Проценты:</label>
+                    <input type="number" id="percentage" name="percentage" placeholder="Введите проценты" required>
+                </div>
+                <div>
+                    <label for="amount">Сумма:</label>
+                    <input type="number" id="amount" name="amount" placeholder="Введите сумму" required>
+                </div>
+            </div>
+
+            <label for="outgoing_calls">Исходящие звонки:</label>
+            <input type="number" id="outgoing_calls" name="outgoing_calls" placeholder="Введите количество" required>
+
+            <div class="horizontal-container">
+                <div>
+                    <label for="new_meetings">Новые встречи:</label>
+                    <input type="number" id="new_meetings" name="new_meetings" placeholder="Введите количество" required>
+                </div>
+                <div>
+                    <label for="meeting_amount">Сумма:</label>
+                    <input type="number" id="meeting_amount" name="meeting_amount" placeholder="Введите сумму" required>
+                </div>
+            </div>
+
+            <label for="office_visits">Пришли в офис:</label>
+            <input type="number" id="office_visits" name="office_visits" placeholder="Введите количество" required>
+
+            <div class="horizontal-container">
+                <div>
+                    <label for="contract_conclusion">Заключение договора:</label>
+                    <input type="number" id="contract_conclusion" name="contract_conclusion" placeholder="Введите количество" required>
+                </div>
+                <div>
+                    <label for="contract_amount">Сумма:</label>
+                    <input type="number" id="contract_amount" name="contract_amount" placeholder="Введите сумму" required>
+                </div>
+            </div>
+
+            <label for="plan_for_tomorrow">План на завтра:</label>
+            <textarea id="plan_for_tomorrow" name="plan_for_tomorrow" placeholder="Введите план на завтра"></textarea>
+
+            <button type="submit">Отправить</button>
+        </form>
+    </div>
+</body>
+</html>
