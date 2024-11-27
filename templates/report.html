@@ -179,10 +179,10 @@
 <body>
     <div class="form-container">
         <div class="header">
-            <img src="https://raw.githubusercontent.com/PavelErsh/images/refs/heads/main/bg.png" alt="Логотип">
+            <img src="https://raw.githubusercontent.com/PavelErsh/images/refs/heads/main/kmk.png" alt="Логотип">
             <h1>Отчёт сотрудника КМК</h1>
         </div>
-        <form action="/submit" method="post">
+        <form action="/send_report" method="post">
             <label for="date">Дата отчёта:</label>
             <input type="date" id="date" name="date" required>
             <script>
@@ -193,55 +193,55 @@
                 };
             </script>
 
-            <label for="new_applications">Новее заявки:</label>
-            <input type="number" id="new_applications" name="new_applications" placeholder="Введите количество" required>
+            <label for="new_applications">Новые заявки:</label>
+            <input type="number" id="new_applications" name="new_applications" placeholder="" required>
 
             <label for="target">Целевые:</label>
-            <input type="number" id="target" name="target" placeholder="Введите количество" required>
+            <input type="number" id="target" name="target" placeholder="Исключаем: спам, рекламу, сотрудничество" required>
 
             <div class="horizontal-container">
                 <div>
                     <label for="percentage">Проценты:</label>
-                    <input type="number" id="percentage" name="percentage" placeholder="Введите проценты" required>
+                    <input type="number" id="percentage" name="percentage" placeholder="" required>
                 </div>
                 <div>
                     <label for="amount">Сумма:</label>
-                    <input type="number" id="amount" name="amount" placeholder="Введите сумму" required>
+                    <input type="number" id="amount" name="amount" placeholder="" required>
                 </div>
             </div>
 
             <label for="outgoing_calls">Исходящие звонки:</label>
-            <input type="number" id="outgoing_calls" name="outgoing_calls" placeholder="Введите количество" required>
+            <input type="number" id="outgoing_calls" name="outgoing_calls" placeholder="" required>
 
             <div class="horizontal-container">
                 <div>
                     <label for="new_meetings">Новые встречи:</label>
-                    <input type="number" id="new_meetings" name="new_meetings" placeholder="Введите количество" required>
+                    <input type="number" id="new_meetings" name="new_meetings" placeholder="Запланированные встречи с новыми клиентами" required>
                 </div>
                 <div>
                     <label for="meeting_amount">Сумма:</label>
-                    <input type="number" id="meeting_amount" name="meeting_amount" placeholder="Введите сумму" required>
+                    <input type="number" id="meeting_amount" name="meeting_amount" placeholder="" required>
                 </div>
             </div>
 
             <label for="office_visits">Пришли в офис:</label>
-            <input type="number" id="office_visits" name="office_visits" placeholder="Введите количество" required>
+            <input type="number" id="office_visits" name="office_visits" placeholder="Общее количество вошедших" required>
 
             <div class="horizontal-container">
                 <div>
                     <label for="contract_conclusion">Заключение договора:</label>
-                    <input type="number" id="contract_conclusion" name="contract_conclusion" placeholder="Введите количество" required>
+                    <input type="number" id="contract_conclusion" name="contract_conclusion" placeholder="" required>
                 </div>
                 <div>
                     <label for="contract_amount">Сумма:</label>
-                    <input type="number" id="contract_amount" name="contract_amount" placeholder="Введите сумму" required>
+                    <input type="number" id="contract_amount" name="contract_amount" placeholder="" required>
                 </div>
             </div>
 
             <label for="plan_for_tomorrow">План на завтра:</label>
-            <textarea id="plan_for_tomorrow" name="plan_for_tomorrow" placeholder="Введите план на завтра"></textarea>
+            <textarea id="plan_for_tomorrow" name="plan_for_tomorrow" placeholder=""></textarea>
 
-            <button type="submit">Отправить</button>
+            <button type="send_report">Отправить</button>
         </form>
     </div>
 </body>
