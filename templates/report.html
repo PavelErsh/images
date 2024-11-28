@@ -25,6 +25,7 @@
             width: 90%;
             box-sizing: border-box;
             overflow: hidden;
+            position: relative;
         }
 
         .form-container:hover {
@@ -174,6 +175,43 @@
         .horizontal-container > div {
             flex: 1;
         }
+
+        /* Стили для лоадера */
+        .loader {
+            display: none;
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #007BFF;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Стили для сообщения об успешной загрузке */
+        .success-message {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 16px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -182,7 +220,7 @@
             <img src="https://raw.githubusercontent.com/PavelErsh/images/refs/heads/main/kmk.png" alt="Логотип">
             <h1>Отчёт сотрудника КМК</h1>
         </div>
-        <form action="/send_report" method="post">
+        <form id="reportForm" action="/send_report" method="post">
             <label for="date">Дата отчёта:</label>
             <input type="date" id="date" name="date" required>
             <script>
@@ -234,18 +272,54 @@
                 </div>
                 <div>
                     <label for="contract_amount">
-                        <br>Сумма:
                         <br>
+                        Сумма:
                     </label>
                     <input type="number" id="contract_amount" name="contract_amount" placeholder="" required>
                 </div>
             </div>
 
             <label for="plan_for_tomorrow">План на завтра:</label>
-            <textarea id="plan_for_tomorrow" name="plan_for_tomorrow" placeholder=""></textarea>
+            <input id="plan_for_tomorrow" name="plan_for_tomorrow" placeholder=""></input>
 
-            <button type="send_report">Отправить</button>
+            <button type="submit">Отправить</button>
         </form>
+        <div class="loader" id="loader"></div>
+        <div class="success-message" id="successMessage">Данные успешно загружены!</div>
     </div>
+
+    <script>
+        document.getElementById('reportForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+
+            // Создаем объект FormData из формы
+            const formData = new FormData(event.target);
+
+            // Отправляем данные на сервер
+            fetch('/send_report', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+                // Очищаем форму после успешной отправки
+                event.target.reset();
+
+                // Скрываем сообщение об успешной загрузке через 3 секунды
+                setTimeout(() => {
+                    document.getElementById('successMessage').style.display = 'none';
+                }, 3000);
+            })
+            .catch(error => {
+                document.getElementById('loader').style.display = 'none';
+                alert('Ошибка при отправке отчета');
+                console.error('Error:', error);
+            });
+        });
+    </script>
 </body>
 </html>

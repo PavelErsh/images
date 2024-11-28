@@ -1,26 +1,73 @@
-from fastapi import FastAPI, Form, Request, File, UploadFile
+from fastapi import FastAPI, Form, Request, File, UploadFile, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from typing import Optional
+import databases
+import sqlalchemy
+from sqlalchemy import (
+    Column,
+    Integer,
+    Numeric,
+    Boolean,
+    Text,
+    DateTime,
+    SmallInteger,
+    String,
+    ForeignKey,
+    TIMESTAMP,
+    Date
+)
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
 app = FastAPI()
 
 templates = Jinja2Templates(directory="templates")
 
-class Report(BaseModel):
-    date: str
-    new_applications: int
-    target: int
-    percentage: int
-    amount: int
-    outgoing_calls: int
-    new_meetings: int
-    meeting_amount: int
-    office_visits: int
-    contract_conclusion: int
-    contract_amount: int
-    plan_for_tomorrow: Optional[str] = None
+DATABASE_URL = "postgresql://db_admin:Hrat6ZyQJORU@37.143.10.252/kmk_mebel"
+
+database = databases.Database(DATABASE_URL)
+metadata = sqlalchemy.MetaData()
+
+engine = sqlalchemy.create_engine(DATABASE_URL)
+metadata.create_all(engine)
+Session = sessionmaker(bind=engine)
+
+Base = declarative_base()
+
+def get_db():
+    db = Session()
+    try:
+        yield db
+    finally:
+        db.close()
+
+class Reports(Base):
+    __tablename__ = "reports"
+    id = Column(Integer, primary_key=True)
+    report_date = Column(Date)
+    user_id = Column(Integer)
+    claims_new = Column(Integer)
+    target = Column(Integer)
+    calc = Column(Integer)
+    calc_amount = Column(Numeric)
+    out_calls = Column(Integer)
+    plan_count = Column(Integer)
+    plan_amount = Column(Numeric)
+    come_office = Column(Integer)
+    arg_count = Column(Integer)
+    arg_amount = Column(Numeric)
+    plan_tomorrow = Column(Text)
+
+class Users(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    tg = Column(Text)
+    full_name = Column(Text)
+    counter = Column(Integer)
+    send_button = Column(Boolean)
+    chat_id = Column(Integer)
 
 class Payment(BaseModel):
     date: str
@@ -50,6 +97,11 @@ async def submit_payment(
         comment=comment
     )
     # Здесь вы можете сохранить чек и данные в базу данных или выполнить другие действия
+    # Например, сохранение файла на сервере
+    file_location = f"uploads/{check_photo.filename}"
+    with open(file_location, "wb") as file:
+        file.write(await check_photo.read())
+
     return {"message": "Чек успешно отправлен", "payment": payment.dict(), "check_photo": check_photo.filename}
 
 @app.get("/report", response_class=HTMLResponse)
@@ -69,24 +121,29 @@ async def submit_report(
     office_visits: int = Form(...),
     contract_conclusion: int = Form(...),
     contract_amount: int = Form(...),
-    plan_for_tomorrow: Optional[str] = Form(None)
+    plan_for_tomorrow: Optional[str] = Form(None),
+    db: Session = Depends(get_db)
 ):
-    report = Report(
-        date=date,
-        new_applications=new_applications,
+    new_report = Reports(
+        report_date=date,
+        user_id=1,  # нужно брать из бота
+        claims_new=new_applications,
         target=target,
-        percentage=percentage,
-        amount=amount,
-        outgoing_calls=outgoing_calls,
-        new_meetings=new_meetings,
-        meeting_amount=meeting_amount,
-        office_visits=office_visits,
-        contract_conclusion=contract_conclusion,
-        contract_amount=contract_amount,
-        plan_for_tomorrow=plan_for_tomorrow
+        calc=percentage,
+        calc_amount=amount,
+        out_calls=outgoing_calls,
+        plan_count=new_meetings,
+        plan_amount=meeting_amount,
+        come_office=office_visits,
+        arg_count=contract_conclusion,
+        arg_amount=contract_amount,
+        plan_tomorrow=plan_for_tomorrow,
     )
+    db.add(new_report)
+    db.commit()
+
     # Здесь вы можете сохранить отчет в базу данных или выполнить другие действия
-    return {"message": "Отчет успешно отправлен", "report": report.dict()}
+    return {"message": "Отчет успешно отправлен"}
 
 # Создайте папку templates и внутри нее файл form.html
 # В form.html добавьте ваш HTML код
